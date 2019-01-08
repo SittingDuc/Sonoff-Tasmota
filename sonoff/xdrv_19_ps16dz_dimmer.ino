@@ -91,6 +91,15 @@ boolean PS16DZSetPower(void)
   return status;
 }
 
+<<<<<<< HEAD
+=======
+boolean PS16DZSetChannels(void)
+{
+  PS16DZSerialDuty(((uint8_t*)XdrvMailbox.data)[0]);
+  return true;
+}
+
+>>>>>>> upstream/master
 void PS16DZSerialDuty(uint8_t duty)
 {
   if (duty > 0 && !ps16dz_ignore_dim && PS16DZSerial) {
@@ -153,8 +162,14 @@ void PS16DZSerialInput(void)
         memset(ps16dz_rx_buffer, 0, PS16DZ_BUFFER_SIZE);
         ps16dz_byte_counter = 0;
       }
+<<<<<<< HEAD
       if (ps16dz_byte_counter || (!ps16dz_byte_counter && serial_in_byte == 'A'));
       ps16dz_rx_buffer[ps16dz_byte_counter++] = serial_in_byte;
+=======
+      if (ps16dz_byte_counter || (!ps16dz_byte_counter && serial_in_byte == 'A')) {
+        ps16dz_rx_buffer[ps16dz_byte_counter++] = serial_in_byte;
+      }
+>>>>>>> upstream/master
     }
     else {
       ps16dz_rx_buffer[ps16dz_byte_counter++] = 0x00;
@@ -236,6 +251,12 @@ boolean Xdrv19(byte function)
       case FUNC_SET_DEVICE_POWER:
         result = PS16DZSetPower();
         break;
+<<<<<<< HEAD
+=======
+      case FUNC_SET_CHANNELS:
+        result = PS16DZSetChannels();
+        break;
+>>>>>>> upstream/master
     }
   }
   return result;

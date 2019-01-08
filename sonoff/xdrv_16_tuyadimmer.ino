@@ -133,6 +133,15 @@ boolean TuyaSetPower(void)
   return status;
 }
 
+<<<<<<< HEAD
+=======
+boolean TuyaSetChannels(void)
+{
+  LightSerialDuty(((uint8_t*)XdrvMailbox.data)[0]);
+  return true;
+}
+
+>>>>>>> upstream/master
 void LightSerialDuty(uint8_t duty)
 {
   if (duty > 0 && !tuya_ignore_dim && TuyaSerial) {
@@ -416,6 +425,12 @@ boolean Xdrv16(byte function)
       case FUNC_EVERY_SECOND:
         if(TuyaSerial && tuya_wifi_state!=WifiState()) { TuyaSetWifiLed(); }
         break;
+<<<<<<< HEAD
+=======
+      case FUNC_SET_CHANNELS:
+        result = TuyaSetChannels();
+        break;
+>>>>>>> upstream/master
     }
   }
   return result;

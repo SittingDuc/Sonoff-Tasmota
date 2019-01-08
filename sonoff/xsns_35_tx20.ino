@@ -172,6 +172,7 @@ void Tx20Init(void) {
 
 void Tx20Show(boolean json)
 {
+<<<<<<< HEAD
   char wind_speed_string[10];
   char wind_speed_max_string[10];
   char wind_speed_avg_string[10];
@@ -180,6 +181,15 @@ void Tx20Show(boolean json)
   dtostrfd(tx20_wind_speed_kmh, 2, wind_speed_string);
   dtostrfd(tx20_wind_speed_max, 2, wind_speed_max_string);
   dtostrfd(tx20_wind_speed_avg, 2, wind_speed_avg_string);
+=======
+  char wind_speed_string[33];
+  dtostrfd(tx20_wind_speed_kmh, 2, wind_speed_string);
+  char wind_speed_max_string[33];
+  dtostrfd(tx20_wind_speed_max, 2, wind_speed_max_string);
+  char wind_speed_avg_string[33];
+  dtostrfd(tx20_wind_speed_avg, 2, wind_speed_avg_string);
+  char wind_direction_string[4];
+>>>>>>> upstream/master
   GetTextIndexed(wind_direction_string, sizeof(wind_direction_string), tx20_wind_direction, kTx20Directions);
 
   if (json) {

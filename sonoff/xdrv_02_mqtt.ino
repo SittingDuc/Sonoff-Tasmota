@@ -49,13 +49,24 @@
 
 #ifndef MQTT_LIBRARY_TYPE
 #define MQTT_LIBRARY_TYPE      MQTT_PUBSUBCLIENT   // Use PubSubClient library as it only supports TLS
+<<<<<<< HEAD:sonoff/xdrv_02_mqtt.ino
 #endif
 
+=======
+>>>>>>> upstream/master:sonoff/xdrv_02_mqtt.ino
 #endif
+
+#endif  //  USE_MQTT_TLS
 
 /*********************************************************************************************/
 
 #ifdef USE_MQTT_TLS
+<<<<<<< HEAD:sonoff/xdrv_02_mqtt.ino
+=======
+#ifdef USE_MQTT_TLS_CA_CERT
+  #include "sonoff_letsencrypt.h"           // LetsEncrypt certificate
+#endif
+>>>>>>> upstream/master:sonoff/xdrv_02_mqtt.ino
   WiFiClientSecure EspClient;               // Wifi Secure Client
 #else
   WiFiClient EspClient;                     // Wifi Client
@@ -403,9 +414,7 @@ void MqttConnected(void)
     if (strstr(Settings.mqtt_fulltopic, MQTT_TOKEN_TOPIC) != NULL) {
       GetTopic_P(stopic, CMND, Settings.mqtt_grptopic, PSTR("#"));
       MqttSubscribe(stopic);
-      fallback_topic_flag = 1;
-      GetTopic_P(stopic, CMND, mqtt_client, PSTR("#"));
-      fallback_topic_flag = 0;
+      GetFallbackTopic_P(stopic, CMND, PSTR("#"));
       MqttSubscribe(stopic);
     }
 
@@ -414,7 +423,12 @@ void MqttConnected(void)
 
   if (mqtt_initial_connection_state) {
     snprintf_P(mqtt_data, sizeof(mqtt_data), PSTR("{\"" D_CMND_MODULE "\":\"%s\",\"" D_JSON_VERSION "\":\"%s%s\",\"" D_JSON_FALLBACKTOPIC "\":\"%s\",\"" D_CMND_GROUPTOPIC "\":\"%s\"}"),
+<<<<<<< HEAD:sonoff/xdrv_02_mqtt.ino
       my_module.name, my_version, my_image, mqtt_client, Settings.mqtt_grptopic);
+=======
+      my_module.name, my_version, my_image, GetFallbackTopic_P(stopic, CMND, ""), Settings.mqtt_grptopic);
+//      my_module.name, my_version, my_image, mqtt_client, Settings.mqtt_grptopic);
+>>>>>>> upstream/master:sonoff/xdrv_02_mqtt.ino
     MqttPublishPrefixTopic_P(TELE, PSTR(D_RSLT_INFO "1"));
 #ifdef USE_WEBSERVER
     if (Settings.webserver) {
@@ -467,6 +481,15 @@ boolean MqttCheckTls(void)
       Settings.mqtt_host, Settings.mqtt_port, mqtt_retry_counter);
     AddLog(LOG_LEVEL_DEBUG);
   } else {
+#ifdef USE_MQTT_TLS_CA_CERT
+    unsigned char tls_ca_cert[] = MQTT_TLS_CA_CERT;
+    if (EspClient.setCACert(tls_ca_cert, MQTT_TLS_CA_CERT_LENGTH)) {
+      if (EspClient.verifyCertChain(Settings.mqtt_host)) {
+        AddLog_P(LOG_LEVEL_INFO, S_LOG_MQTT, PSTR(D_VERIFIED "CA"));
+        result = true;
+      }
+    }
+#else
     if (EspClient.verify(fingerprint1, Settings.mqtt_host)) {
       AddLog_P(LOG_LEVEL_INFO, S_LOG_MQTT, PSTR(D_VERIFIED "1"));
       result = true;
@@ -475,6 +498,7 @@ boolean MqttCheckTls(void)
       AddLog_P(LOG_LEVEL_INFO, S_LOG_MQTT, PSTR(D_VERIFIED "2"));
       result = true;
     }
+#endif
   }
   if (!result) AddLog_P(LOG_LEVEL_INFO, S_LOG_MQTT, PSTR(D_FAILED));
   EspClient.stop();
@@ -839,6 +863,7 @@ const char S_CONFIGURE_MQTT[] PROGMEM = D_CONFIGURE_MQTT;
 
 const char HTTP_BTN_MENU_MQTT[] PROGMEM =
   "<br/><form action='" WEB_HANDLE_MQTT "' method='get'><button>" D_CONFIGURE_MQTT "</button></form>";
+<<<<<<< HEAD:sonoff/xdrv_02_mqtt.ino
 
 const char HTTP_FORM_MQTT[] PROGMEM =
   "<fieldset><legend><b>&nbsp;" D_MQTT_PARAMETERS "&nbsp;</b></legend><form method='get' action='" WEB_HANDLE_MQTT "'>"
@@ -850,6 +875,19 @@ const char HTTP_FORM_MQTT[] PROGMEM =
   "<br/><b>" D_TOPIC "</b> = %topic% (" MQTT_TOPIC ")<br/><input id='mt' name='mt' placeholder='" MQTT_TOPIC" ' value='{m6'><br/>"
   "<br/><b>" D_FULL_TOPIC "</b> (" MQTT_FULLTOPIC ")<br/><input id='mf' name='mf' placeholder='" MQTT_FULLTOPIC" ' value='{m7'><br/>";
 
+=======
+
+const char HTTP_FORM_MQTT[] PROGMEM =
+  "<fieldset><legend><b>&nbsp;" D_MQTT_PARAMETERS "&nbsp;</b></legend><form method='get' action='" WEB_HANDLE_MQTT "'>"
+  "<br/><b>" D_HOST "</b> (" MQTT_HOST ")<br/><input id='mh' name='mh' placeholder='" MQTT_HOST" ' value='{m1'><br/>"
+  "<br/><b>" D_PORT "</b> (" STR(MQTT_PORT) ")<br/><input id='ml' name='ml' placeholder='" STR(MQTT_PORT) "' value='{m2'><br/>"
+  "<br/><b>" D_CLIENT "</b> ({m0)<br/><input id='mc' name='mc' placeholder='" MQTT_CLIENT_ID "' value='{m3'><br/>"
+  "<br/><b>" D_USER "</b> (" MQTT_USER ")<br/><input id='mu' name='mu' placeholder='" MQTT_USER "' value='{m4'><br/>"
+  "<br/><b>" D_PASSWORD "</b><br/><input id='mp' name='mp' type='password' placeholder='" D_PASSWORD "' value='" D_ASTERIX "'><br/>"
+  "<br/><b>" D_TOPIC "</b> = %topic% (" MQTT_TOPIC ")<br/><input id='mt' name='mt' placeholder='" MQTT_TOPIC" ' value='{m6'><br/>"
+  "<br/><b>" D_FULL_TOPIC "</b> (" MQTT_FULLTOPIC ")<br/><input id='mf' name='mf' placeholder='" MQTT_FULLTOPIC" ' value='{m7'><br/>";
+
+>>>>>>> upstream/master:sonoff/xdrv_02_mqtt.ino
 void HandleMqttConfiguration(void)
 {
   if (HttpUser()) { return; }
@@ -873,7 +911,10 @@ void HandleMqttConfiguration(void)
   page.replace(F("{m2"), String(Settings.mqtt_port));
   page.replace(F("{m3"), Settings.mqtt_client);
   page.replace(F("{m4"), (Settings.mqtt_user[0] == '\0')?"0":Settings.mqtt_user);
+<<<<<<< HEAD:sonoff/xdrv_02_mqtt.ino
   page.replace(F("{m5"), (Settings.mqtt_pwd[0] == '\0')?"0":Settings.mqtt_pwd);
+=======
+>>>>>>> upstream/master:sonoff/xdrv_02_mqtt.ino
   page.replace(F("{m6"), Settings.mqtt_topic);
   page.replace(F("{m7"), Settings.mqtt_fulltopic);
 
@@ -909,9 +950,15 @@ void MqttSaveSettings(void)
   WebGetArg("mu", tmp, sizeof(tmp));
   strlcpy(Settings.mqtt_user, (!strlen(tmp)) ? MQTT_USER : (!strcmp(tmp,"0")) ? "" : tmp, sizeof(Settings.mqtt_user));
   WebGetArg("mp", tmp, sizeof(tmp));
+<<<<<<< HEAD:sonoff/xdrv_02_mqtt.ino
   strlcpy(Settings.mqtt_pwd, (!strlen(tmp)) ? MQTT_PASS : (!strcmp(tmp,"0")) ? "" : tmp, sizeof(Settings.mqtt_pwd));
   snprintf_P(log_data, sizeof(log_data), PSTR(D_LOG_MQTT D_CMND_MQTTHOST " %s, " D_CMND_MQTTPORT " %d, " D_CMND_MQTTCLIENT " %s, " D_CMND_MQTTUSER " %s, " D_CMND_MQTTPASSWORD " %s, " D_CMND_TOPIC " %s, " D_CMND_FULLTOPIC " %s"),
     Settings.mqtt_host, Settings.mqtt_port, Settings.mqtt_client, Settings.mqtt_user, Settings.mqtt_pwd, Settings.mqtt_topic, Settings.mqtt_fulltopic);
+=======
+  strlcpy(Settings.mqtt_pwd, (!strlen(tmp)) ? "" : (strchr(tmp,'*')) ? Settings.mqtt_pwd : tmp, sizeof(Settings.mqtt_pwd));
+  snprintf_P(log_data, sizeof(log_data), PSTR(D_LOG_MQTT D_CMND_MQTTHOST " %s, " D_CMND_MQTTPORT " %d, " D_CMND_MQTTCLIENT " %s, " D_CMND_MQTTUSER " %s, " D_CMND_TOPIC " %s, " D_CMND_FULLTOPIC " %s"),
+    Settings.mqtt_host, Settings.mqtt_port, Settings.mqtt_client, Settings.mqtt_user, Settings.mqtt_topic, Settings.mqtt_fulltopic);
+>>>>>>> upstream/master:sonoff/xdrv_02_mqtt.ino
   AddLog(LOG_LEVEL_INFO);
 }
 #endif  // USE_WEBSERVER

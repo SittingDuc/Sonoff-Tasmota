@@ -203,6 +203,7 @@ void SDM120250ms(void)              // Every 250 mSec
 #ifdef USE_SDM220
           case 8:
             sdm120_phase_angle = value;
+<<<<<<< HEAD
             break; 
             
           case 9:
@@ -225,6 +226,30 @@ void SDM120250ms(void)              // Every 250 mSec
             sdm120_total_reactive = value;
             break;            
 #endif  // USE_SDM220          
+=======
+            break;
+
+          case 9:
+            sdm120_import_active = value;
+            break;
+
+          case 10:
+            sdm120_export_active = value;
+            break;
+
+          case 11:
+            sdm120_import_reactive = value;
+            break;
+
+          case 12:
+            sdm120_export_reactive = value;
+            break;
+
+          case 13:
+            sdm120_total_reactive = value;
+            break;
+#endif  // USE_SDM220
+>>>>>>> upstream/master
         } // end switch
 
         sdm120_read_state++;
@@ -283,6 +308,7 @@ const char HTTP_SNS_SDM120_DATA[] PROGMEM = "%s"
 
 void SDM120Show(boolean json)
 {
+<<<<<<< HEAD
   char voltage[10];
   char current[10];
   char active_power[10];
@@ -301,8 +327,19 @@ void SDM120Show(boolean json)
   dtostrfd(sdm120_voltage,        Settings.flag2.voltage_resolution, voltage);
   dtostrfd(sdm120_current,        Settings.flag2.current_resolution, current);
   dtostrfd(sdm120_active_power,   Settings.flag2.wattage_resolution, active_power);
+=======
+  char voltage[33];
+  dtostrfd(sdm120_voltage,        Settings.flag2.voltage_resolution, voltage);
+  char current[33];
+  dtostrfd(sdm120_current,        Settings.flag2.current_resolution, current);
+  char active_power[33];
+  dtostrfd(sdm120_active_power,   Settings.flag2.wattage_resolution, active_power);
+  char apparent_power[33];
+>>>>>>> upstream/master
   dtostrfd(sdm120_apparent_power, Settings.flag2.wattage_resolution, apparent_power);
+  char reactive_power[33];
   dtostrfd(sdm120_reactive_power, Settings.flag2.wattage_resolution, reactive_power);
+<<<<<<< HEAD
   dtostrfd(sdm120_power_factor,   2, power_factor);
   dtostrfd(sdm120_frequency,      Settings.flag2.frequency_resolution, frequency);
   dtostrfd(sdm120_energy_total,   Settings.flag2.energy_resolution, energy_total);
@@ -312,6 +349,26 @@ void SDM120Show(boolean json)
   dtostrfd(sdm120_export_active,  Settings.flag2.wattage_resolution, export_active);
   dtostrfd(sdm120_import_reactive,Settings.flag2.wattage_resolution, import_reactive);
   dtostrfd(sdm120_export_reactive,Settings.flag2.wattage_resolution, export_reactive);
+=======
+  char power_factor[33];
+  dtostrfd(sdm120_power_factor,   2, power_factor);
+  char frequency[33];
+  dtostrfd(sdm120_frequency,      Settings.flag2.frequency_resolution, frequency);
+  char energy_total[33];
+  dtostrfd(sdm120_energy_total,   Settings.flag2.energy_resolution, energy_total);
+#ifdef USE_SDM220
+  char phase_angle[33];
+  dtostrfd(sdm120_phase_angle,    2, phase_angle);
+  char import_active[33];
+  dtostrfd(sdm120_import_active,  Settings.flag2.wattage_resolution, import_active);
+  char export_active[33];
+  dtostrfd(sdm120_export_active,  Settings.flag2.wattage_resolution, export_active);
+  char import_reactive[33];
+  dtostrfd(sdm120_import_reactive,Settings.flag2.wattage_resolution, import_reactive);
+  char export_reactive[33];
+  dtostrfd(sdm120_export_reactive,Settings.flag2.wattage_resolution, export_reactive);
+  char total_reactive[33];
+>>>>>>> upstream/master
   dtostrfd(sdm120_total_reactive, Settings.flag2.wattage_resolution, total_reactive);
 #endif // USE_SDM220
   if (json) {

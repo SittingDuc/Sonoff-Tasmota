@@ -568,7 +568,11 @@ void HueLightStatus1(byte device, String *response)
 {
   float hue = 0;
   float sat = 0;
+<<<<<<< HEAD
   float bri = 0;
+=======
+  float bri = 254;
+>>>>>>> upstream/master
   uint16_t ct = 500;
 
   if (light_type) {

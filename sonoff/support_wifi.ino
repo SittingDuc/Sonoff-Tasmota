@@ -249,7 +249,11 @@ void WifiBeginAfterScan()
     uint8_t* bssid = WiFi.BSSID();                  // Get current bssid
     memcpy((void*) &wifi_bssid, (void*) bssid, sizeof(wifi_bssid));
     best_network_db = WiFi.RSSI();                  // Get current rssi and add threshold
+<<<<<<< HEAD
     if (best_network_db < -WIFI_RSSI_THRESHOLD) { best_network_db +WIFI_RSSI_THRESHOLD; }
+=======
+    if (best_network_db < -WIFI_RSSI_THRESHOLD) { best_network_db += WIFI_RSSI_THRESHOLD; }
+>>>>>>> upstream/master
     wifi_scan_state = 3;
   }
   // Init scan

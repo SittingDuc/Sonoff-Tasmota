@@ -538,6 +538,11 @@
 #define D_SENSOR_SSPI_CS   "SSPI CS"
 #define D_SENSOR_SSPI_DC   "SSPI DC"
 #define D_SENSOR_RF_SENSOR "RF Sensor"
+<<<<<<< HEAD
+=======
+#define D_SENSOR_AZ_RX   "AZ Rx"
+#define D_SENSOR_AZ_TX   "AZ Tx"
+>>>>>>> upstream/master
 
 // Units
 #define D_UNIT_AMPERE "A"
