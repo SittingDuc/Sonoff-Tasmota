@@ -58,11 +58,11 @@
 enum LightCommands {
   CMND_COLOR, CMND_COLORTEMPERATURE, CMND_DIMMER, CMND_LED, CMND_LEDTABLE, CMND_FADE,
   CMND_PIXELS, CMND_RGBWWTABLE, CMND_ROTATION, CMND_SCHEME, CMND_SPEED, CMND_WAKEUP, CMND_WAKEUPDURATION,
-  CMND_WHITE, CMND_WIDTH, CMND_CHANNEL, CMND_HSBCOLOR, CMND_UNDOCA };
+  CMND_WHITE, CMND_WIDTH, CMND_CHANNEL, CMND_HSBCOLOR, CMND_SROTATION, CMND_SPIXELS, CMND_SSTRINGS, CMND_SOFFSET, CMND_UNDOCA };
 const char kLightCommands[] PROGMEM =
   D_CMND_COLOR "|" D_CMND_COLORTEMPERATURE "|" D_CMND_DIMMER "|" D_CMND_LED "|" D_CMND_LEDTABLE "|" D_CMND_FADE "|"
   D_CMND_PIXELS "|" D_CMND_RGBWWTABLE "|" D_CMND_ROTATION "|" D_CMND_SCHEME "|" D_CMND_SPEED "|" D_CMND_WAKEUP "|" D_CMND_WAKEUPDURATION "|"
-  D_CMND_WHITE "|" D_CMND_WIDTH "|" D_CMND_CHANNEL "|" D_CMND_HSBCOLOR "|UNDOCA" ;
+  D_CMND_WHITE "|" D_CMND_WIDTH "|" D_CMND_CHANNEL "|" D_CMND_HSBCOLOR "|" D_CMND_SROTATION "|" D_CMND_SPIXELS "|" D_CMND_SSTRINGS "|" D_CMND_SOFFSET "|UNDOCA" ;
 
 struct LRgbColor {
   uint8_t R, G, B;
@@ -842,22 +842,6 @@ void LightAnimate(void)
       else if (light_type > LT_WS2812) {
         LightMy92x1Duty(cur_col[0], cur_col[1], cur_col[2], cur_col[3], cur_col[4]);
       }
-#ifdef USE_TUYA_DIMMER
-      if (light_type == LT_SERIAL1 && Settings.module == TUYA_DIMMER ) {
-        LightSerialDuty(cur_col[0]);
-      }
-#endif  // USE_TUYA_DIMMER
-#ifdef USE_ARMTRONIX_DIMMERS
-      if (light_type == LT_SERIAL2) {
-        LightSerial2Duty(cur_col[0],cur_col[1]);
-      }
-#endif  // USE_ARMTRONIX_DIMMERS
-#ifdef USE_PS_16_DZ
-      if (light_type == LT_SERIAL1 && Settings.module == PS_16_DZ) {
-        PS16DZSerialDuty(cur_col[0]);
-      }
-#endif  // USE_PS_16_DZ
-
     }
   }
 }
@@ -1237,6 +1221,44 @@ boolean LightCommand(void)
     }
     snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_NVALUE, command, Settings.light_rotation);
   }
+  /* Gerard */
+  else if ((CMND_SSTRINGS == command_code) && (LT_WS2812 == light_type)) {
+    if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload <= WS2812_MAX_STRINGS)) {
+      Settings.light_strings = XdrvMailbox.payload;
+    }
+    snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_NVALUE, command, Settings.light_strings);
+  }
+  else if ((CMND_SPIXELS == command_code) && (LT_WS2812 == light_type)) {
+    uint8_t retidx=0;
+    if ((XdrvMailbox.index > 0) && (XdrvMailbox.index <= WS2812_MAX_STRINGS)) {
+       retidx=XdrvMailbox.index -1;
+       if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload <= WS2812_MAX_LEDS)) {
+          Settings.string_pixels[retidx] = XdrvMailbox.payload;
+       }
+    }
+    snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_NVALUE, command, XdrvMailbox.index, Settings.string_pixels[retidx]); // returns entry 0 when invalid call made
+  }
+  else if ((CMND_SROTATION == command_code) && (LT_WS2812 == light_type)) {
+    uint8_t retidx=0;
+    if ((XdrvMailbox.index > 0) && (XdrvMailbox.index <= WS2812_MAX_STRINGS)) {
+       retidx=XdrvMailbox.index -1;
+       if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload <= WS2812_MAX_LEDS)) {
+           Settings.string_rotation[retidx] = XdrvMailbox.payload;
+       }
+    }
+    snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_NVALUE, command, XdrvMailbox.index, Settings.string_rotation[retidx]); // returns entry 0 when invalid call made
+  }
+  else if ((CMND_SOFFSET == command_code) && (LT_WS2812 == light_type)) {
+    uint8_t retidx=0;
+    if ((XdrvMailbox.index > 0) && (XdrvMailbox.index <= WS2812_MAX_STRINGS)) {
+       retidx=XdrvMailbox.index -1;
+       if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload < Settings.light_pixels)) {
+          Settings.string_offset[retidx] = XdrvMailbox.payload;
+       }
+    }
+    snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_NVALUE, command, XdrvMailbox.index, Settings.string_offset[retidx]); // returns entry 0 when invalid call made
+  }
+  /* End Gerard */
   else if ((CMND_WIDTH == command_code) && (LT_WS2812 == light_type) && (XdrvMailbox.index > 0) && (XdrvMailbox.index <= 4)) {
     if (1 == XdrvMailbox.index) {
       if ((XdrvMailbox.payload >= 0) && (XdrvMailbox.payload <= 4)) {

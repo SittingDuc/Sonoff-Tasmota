@@ -338,6 +338,10 @@
 #define D_CMND_WAKEUPDURATION "WakeUpDuration"
 #define D_CMND_WHITE "White"
 #define D_CMND_WIDTH "Width"
+#define D_CMND_SSTRINGS "SStrings"
+#define D_CMND_SOFFSET "SOffset"
+#define D_CMND_SROTATION "SRotation"
+#define D_CMND_SPIXELS "SPixels"
 
 // Commands xdrv_05_irremote.ino
 #define D_CMND_IRSEND "IRSend"

@@ -68,11 +68,7 @@ typedef union {                            // Restricted by MISRA-C Rule 18.4 bu
     uint32_t time_append_timezone : 1;     // bit 2 (v6.2.1.2)
     uint32_t gui_hostname_ip : 1;          // bit 3 (v6.2.1.20)
     uint32_t tuya_apply_o20 : 1;           // bit 4 (v6.3.0.4)
-<<<<<<< HEAD
-    uint32_t hass_short_discovery_msg : 1; // bit 5 (v6.3.0.7)
-=======
     uint32_t spare5 : 1;
->>>>>>> upstream/master
     uint32_t use_wifi_scan : 1;            // bit 6 (v6.3.0.10)
     uint32_t use_wifi_rescan : 1;          // bit 7 (v6.3.0.10)
     uint32_t receive_raw : 1;              // bit 8 (v6.3.0.11)
@@ -261,7 +257,7 @@ struct SYSCFG {
   uint8_t       last_module;               // 399
   uint16_t      blinktime;                 // 39A
   uint16_t      blinkcount;                // 39C
-  uint16_t      light_rotation;            // 39E
+  uint16_t      light_rotation;            // NaN
   SysBitfield3  flag3;                     // 3A0
   uint8_t       switchmode[MAX_SWITCHES];  // 3A4  (6.0.0b - moved from 0x4CA)
   char          friendlyname[MAX_FRIENDLYNAMES][33]; // 3AC
@@ -275,7 +271,11 @@ struct SYSCFG {
   uint8_t       ws_color[4][3];            // 475
   uint8_t       ws_width[3];               // 481
   myio          my_gp;                     // 484
-  uint16_t      light_pixels;              // 496
+  uint16_t      light_pixels;           // NaN
+  uint8_t       light_strings; // NaN
+  uint8_t       string_offset[WS2812_MAX_STRINGS]; // NaN
+  uint16_t      string_pixels[WS2812_MAX_STRINGS]; // NaN
+  uint16_t      string_rotation[WS2812_MAX_STRINGS]; // NaN
   uint8_t       light_color[5];            // 498
   uint8_t       light_correction;          // 49D
   uint8_t       light_dimmer;              // 49E
