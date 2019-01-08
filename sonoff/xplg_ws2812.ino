@@ -155,12 +155,12 @@ void Ws2812UpdateHand(int position, uint8_t index, uint8_t series)
   if (Settings.flag.ws_clock_reverse) position = Settings.string_pixels[series] - position;
 
   position = position + Settings.string_offset[series];
-  WsColor hand_color = { Settings.ws_color[index][WS_RED], Settings.ws_color[index][WS_GREEN], Settings.ws_color[index][WS_BLUE] };
+  WsColor hand_color = { Settings.string_color[series][index][WS_RED], Settings.string_color[series][index][WS_GREEN], Settings.string_color[series][index][WS_BLUE] };
 
   Ws2812UpdatePixelColor(position, hand_color, 1);
 
   uint8_t range = 1;
-  if (index < WS_MARKER) range = ((Settings.ws_width[index] - 1) / 2) + 1;
+  if (index < WS_MARKER) range = ((Settings.string_width[series][index] - 1) / 2) + 1;
   for (uint8_t h = 1; h < range; h++) {
     float offset = (float)(range - h) / (float)range;
     Ws2812UpdatePixelColor(position - h, hand_color, offset);
@@ -181,7 +181,7 @@ void Ws2812Clock(void)
     Ws2812UpdateHand((RtcTime.second * 1000) / clksize, WS_SECOND, series);
     Ws2812UpdateHand((RtcTime.minute * 1000) / clksize, WS_MINUTE, series);
     Ws2812UpdateHand(((RtcTime.hour % 12) * (5000 / clksize)) + ((RtcTime.minute * 1000) / (12 * clksize)), WS_HOUR, series);
-    if (Settings.ws_color[WS_MARKER][WS_RED] + Settings.ws_color[WS_MARKER][WS_GREEN] + Settings.ws_color[WS_MARKER][WS_BLUE]) {
+    if (Settings.string_color[series][WS_MARKER][WS_RED] + Settings.string_color[series][WS_MARKER][WS_GREEN] + Settings.string_color[series][WS_MARKER][WS_BLUE]) {
       for (byte i = 0; i < 12; i++) {
         Ws2812UpdateHand((i * 5000) / clksize, WS_MARKER, series);
       }

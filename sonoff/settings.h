@@ -276,6 +276,8 @@ struct SYSCFG {
   uint8_t       string_offset[WS2812_MAX_STRINGS]; // NaN
   uint16_t      string_pixels[WS2812_MAX_STRINGS]; // NaN
   uint16_t      string_rotation[WS2812_MAX_STRINGS]; // NaN
+  uint8_t       string_color[WS2812_MAX_STRINGS][4][3]; // NaN
+  uint8_t       string_width[WS2812_MAX_STRINGS][3]; // NaN
   uint8_t       light_color[5];            // 498
   uint8_t       light_correction;          // 49D
   uint8_t       light_dimmer;              // 49E

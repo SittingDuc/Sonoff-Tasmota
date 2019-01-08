@@ -58,11 +58,13 @@
 enum LightCommands {
   CMND_COLOR, CMND_COLORTEMPERATURE, CMND_DIMMER, CMND_LED, CMND_LEDTABLE, CMND_FADE,
   CMND_PIXELS, CMND_RGBWWTABLE, CMND_ROTATION, CMND_SCHEME, CMND_SPEED, CMND_WAKEUP, CMND_WAKEUPDURATION,
-  CMND_WHITE, CMND_WIDTH, CMND_CHANNEL, CMND_HSBCOLOR, CMND_SROTATION, CMND_SPIXELS, CMND_SSTRINGS, CMND_SOFFSET, CMND_UNDOCA };
+  CMND_WHITE, CMND_WIDTH, CMND_CHANNEL, CMND_HSBCOLOR, CMND_SROTATION, CMND_SPIXELS, CMND_SSTRINGS, CMND_SOFFSET, CMND_SCOLOR, CMND_SWIDTH,
+  CMND_UNDOCA };
 const char kLightCommands[] PROGMEM =
   D_CMND_COLOR "|" D_CMND_COLORTEMPERATURE "|" D_CMND_DIMMER "|" D_CMND_LED "|" D_CMND_LEDTABLE "|" D_CMND_FADE "|"
   D_CMND_PIXELS "|" D_CMND_RGBWWTABLE "|" D_CMND_ROTATION "|" D_CMND_SCHEME "|" D_CMND_SPEED "|" D_CMND_WAKEUP "|" D_CMND_WAKEUPDURATION "|"
-  D_CMND_WHITE "|" D_CMND_WIDTH "|" D_CMND_CHANNEL "|" D_CMND_HSBCOLOR "|" D_CMND_SROTATION "|" D_CMND_SPIXELS "|" D_CMND_SSTRINGS "|" D_CMND_SOFFSET "|UNDOCA" ;
+  D_CMND_WHITE "|" D_CMND_WIDTH "|" D_CMND_CHANNEL "|" D_CMND_HSBCOLOR "|" D_CMND_SROTATION "|" D_CMND_SPIXELS "|" D_CMND_SSTRINGS "|" D_CMND_SOFFSET "|"
+  D_CMND_SCOLOR "|" D_CMND_SWIDTH "|UNDOCA" ;
 
 struct LRgbColor {
   uint8_t R, G, B;
@@ -1113,6 +1115,9 @@ boolean LightCommand(void)
         } else {             // Color3, 4, 5 and 6
           for (byte i = 0; i < LST_RGB; i++) {
             Settings.ws_color[XdrvMailbox.index -3][i] = light_entry_color[i];
+            for (byte series = 0; series < WS2812_MAX_STRINGS; series++) {
+              Settings.string_color[series][XdrvMailbox.index -3][i] = light_entry_color[i];
+            }
           }
         }
       }
@@ -1258,6 +1263,44 @@ boolean LightCommand(void)
     }
     snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_NVALUE, command, XdrvMailbox.index, Settings.string_offset[retidx]); // returns entry 0 when invalid call made
   }
+  else if ((CMND_SWIDTH == command_code) && (LT_WS2812 == light_type) && (XdrvMailbox.index > 0) && (XdrvMailbox.index <= WS2812_MAX_STRINGS*3)) {
+     uint8_t retidx=(XdrvMailbox.index-1)/3;
+     uint8_t handidx=(XdrvMailbox.index-1)%3;
+     // swidth<n> = (string,hand)
+     // 1 = (0,second), 2 = (0,minute), 3 = (0,hour)
+     // 4 = (1,second), 5 = (1,minute), 6 = (1,hour)
+     // 7 = (2,second), 8 = (2,minute), 9 = (1,hour)
+     if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload < 32)) {
+        Settings.string_width[retidx][handidx] = XdrvMailbox.payload;
+     }
+     snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_NVALUE, command, XdrvMailbox.index, Settings.string_width[retidx][handidx]);
+  }
+  else if ((CMND_SCOLOR == command_code) && ((LT_WS2812 == light_type) && (XdrvMailbox.index > 0) && (XdrvMailbox.index <= WS2812_MAX_STRINGS*4))) {
+     uint8_t retidx=(XdrvMailbox.index-1)/4;
+     uint8_t handidx=(XdrvMailbox.index-1)%4;
+     // swidth<n> = (string,hand)
+     // 1 = (0,second), 2 = (0,minute), 3 = (0,hour), 4 = (0,marker)
+     // 5 = (1,second), 6 = (1,minute), 7 = (1,hour), 8 = (1,marker)
+     // 9 = (2,second), 10= (2,minute), 11= (1,hour), 12= (2,marker)
+     if (XdrvMailbox.data_len > 0) {
+        valid_entry = LightColorEntry(XdrvMailbox.data, XdrvMailbox.data_len);
+        if (valid_entry) {
+          for (byte i = 0; i < LST_RGB; i++) {
+            Settings.string_color[retidx][handidx][i] = light_entry_color[i];
+          }
+        }
+     }
+     scolor[0] = '\0';
+     for (byte i = 0; i < LST_RGB; i++) {
+       if (Settings.flag.decimal_text) {
+         snprintf_P(scolor, 25, PSTR("%s%s%d"), scolor, (i > 0) ? "," : "", Settings.string_color[retidx][handidx][i]);
+       } else {
+         snprintf_P(scolor, 25, PSTR("%s%02X"), scolor, Settings.string_color[retidx][handidx][i]);
+       }
+     }
+     snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_SVALUE, command, XdrvMailbox.index, scolor);
+  }
+
   /* End Gerard */
   else if ((CMND_WIDTH == command_code) && (LT_WS2812 == light_type) && (XdrvMailbox.index > 0) && (XdrvMailbox.index <= 4)) {
     if (1 == XdrvMailbox.index) {
@@ -1268,6 +1311,9 @@ boolean LightCommand(void)
     } else {
       if ((XdrvMailbox.payload > 0) && (XdrvMailbox.payload < 32)) {
         Settings.ws_width[XdrvMailbox.index -2] = XdrvMailbox.payload;
+        for (byte series = 0; series < WS2812_MAX_STRINGS; series++) {
+          Settings.string_width[series][XdrvMailbox.index -2] = XdrvMailbox.payload;
+        }
       }
       snprintf_P(mqtt_data, sizeof(mqtt_data), S_JSON_COMMAND_INDEX_NVALUE, command, XdrvMailbox.index, Settings.ws_width[XdrvMailbox.index -2]);
     }

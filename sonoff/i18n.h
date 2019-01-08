@@ -342,6 +342,8 @@
 #define D_CMND_SOFFSET "SOffset"
 #define D_CMND_SROTATION "SRotation"
 #define D_CMND_SPIXELS "SPixels"
+#define D_CMND_SCOLOR "SColor"
+#define D_CMND_SWIDTH "SWidth"
 
 // Commands xdrv_05_irremote.ino
 #define D_CMND_IRSEND "IRSend"
