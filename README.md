@@ -4,11 +4,7 @@ Alternative firmware for _ESP8266 based devices_ like [iTead](https://www.itead.
 
 [![GitHub version](https://img.shields.io/github/release/arendst/Sonoff-Tasmota.svg)](https://github.com/arendst/Sonoff-Tasmota/releases/latest)
 [![GitHub download](https://img.shields.io/github/downloads/arendst/Sonoff-Tasmota/total.svg)](https://github.com/arendst/Sonoff-Tasmota/releases/latest)
-<<<<<<< HEAD
-[![License](https://img.shields.io/github/license/arendst/Sonoff-Tasmota.svg)](https://github.com/arendst/Sonoff-Tasmota/blob/development/LICENSE.txt)
-=======
 [![License](https://img.shields.io/github/license/arendst/Sonoff-Tasmota.svg)](https://github.com/arendst/Sonoff-Tasmota/blob/master/LICENSE.txt)
->>>>>>> upstream/master
 [![Chat](https://img.shields.io/discord/479389167382691863.svg)](https://discord.gg/Ks2Kzd4)
 
 If you like **Sonoff-Tasmota**, give it a star, or fork it and contribute!
@@ -17,24 +13,9 @@ If you like **Sonoff-Tasmota**, give it a star, or fork it and contribute!
 [![GitHub forks](https://img.shields.io/github/forks/arendst/Sonoff-Tasmota.svg?style=social&label=Fork)](https://github.com/arendst/Sonoff-Tasmota/network)
 [![donate](https://img.shields.io/badge/donate-PayPal-blue.svg)](https://paypal.me/tasmota)
 
-<<<<<<< HEAD
-See [RELEASENOTES.md](https://github.com/arendst/Sonoff-Tasmota/blob/development/RELEASENOTES.md) for release information.
-
-In addition to the [release webpage](https://github.com/arendst/Sonoff-Tasmota/releases/latest) the binaries can also be OTA downloaded from http://thehackbox.org/tasmota/release/
-
-### Development
-[![Dev Version](https://img.shields.io/badge/development%20version-6.3.0.x-blue.svg)](https://github.com/arendst/Sonoff-Tasmota)
-[![Download Dev](https://img.shields.io/badge/download-development-yellow.svg)](http://thehackbox.org/tasmota/)
-[![Build Status](https://img.shields.io/travis/arendst/Sonoff-Tasmota.svg)](https://travis-ci.org/arendst/Sonoff-Tasmota)
-
-See [RELEASENOTES.md](https://github.com/arendst/Sonoff-Tasmota/blob/development/RELEASENOTES.md) for release information and [sonoff/_changelog.ino](https://github.com/arendst/Sonoff-Tasmota/blob/development/sonoff/_changelog.ino) for detailed change information.
-
-The development codebase is checked hourly for changes and if new commits have been merged and compile successfuly they will be posted at http://thehackbox.org/tasmota/ (this web address can be used for OTA too). It is important to note that these are based on the current development codebase and it is not recommended to flash it to devices used in production or which are hard to reach in the event that you need to manually flash the device if OTA failed. The last compiled commit number is also posted on the same page along with the current build status (if a firmware rebuild is in progress).
-=======
 See [RELEASENOTES.md](https://github.com/arendst/Sonoff-Tasmota/blob/master/RELEASENOTES.md) for release information.
 
 In addition to the [release webpage](https://github.com/arendst/Sonoff-Tasmota/releases/latest) the binaries can also be OTA downloaded from http://thehackbox.org/tasmota/release/
->>>>>>> upstream/master
 
 ### Disclaimer
 :warning: **DANGER OF ELECTROCUTION** :warning:
@@ -138,10 +119,7 @@ Libraries used with Sonoff-Tasmota are:
 - [arduino mqtt](https://github.com/256dpi/arduino-mqtt)
 - [Bosch BME680](https://github.com/BoschSensortec/BME680_driver)
 - [C2 Programmer](http://app.cear.ufpb.br/~lucas.hartmann/tag/efm8bb1/)
-<<<<<<< HEAD
-=======
 - [esp-epaper-29-ws-20171230-gemu](https://github.com/gemu2015/Sonoff-Tasmota/tree/displays/lib)
->>>>>>> upstream/master
 - [esp-knx-ip](https://github.com/envy/esp-knx-ip)
 - [I2Cdevlib](https://github.com/jrowberg/i2cdevlib)
 - [IRremoteEsp8266](https://github.com/markszabo/IRremoteESP8266)
@@ -153,10 +131,6 @@ Libraries used with Sonoff-Tasmota are:
 - [OneWire](https://github.com/PaulStoffregen/OneWire)
 - [PubSubClient](https://github.com/knolleary/pubsubclient)
 - [rc-switch](https://github.com/sui77/rc-switch)
-<<<<<<< HEAD
-- [NewPing](https://bitbucket.org/teckel12/arduino-new-ping/wiki/Home)
-=======
->>>>>>> upstream/master
 
 #### People inspiring me
 People helping to keep the show on the road:
